@@ -17,9 +17,32 @@ const canvas = document.querySelector("canvas.webgl")
 
 // Sizes
 const sizes = {
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
 }
+
+window.addEventListener("resize", (e) => {
+  // update size
+  sizes.width = window.innerWidth
+  sizes.height = window.innerHeight
+
+  // update camera
+  camera.aspect = sizes.width / sizes.height
+  camera.updateProjectionMatrix() //recalculate objects based on the new aspect ratio
+
+  // update renderer
+  renderer.setSize(sizes.width, sizes.height)
+  // improve perfomance on devices with high pixel ratios
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+window.addEventListener("dblclick", () => {
+  if (!document.fullscreenElement) {
+    canvas.requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+})
 
 // Scene
 const scene = new THREE.Scene()
@@ -64,6 +87,8 @@ const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 })
 renderer.setSize(sizes.width, sizes.height)
+// improve perfomance on devices with high pixel ratios
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 // Animate
 const clock = new THREE.Clock()
