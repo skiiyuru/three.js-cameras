@@ -48,9 +48,20 @@ window.addEventListener("dblclick", () => {
 const scene = new THREE.Scene()
 
 // Object
+// const positions = new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0])
+// const attribute = new THREE.BufferAttribute(positions, 3)
+const count = 50
+const positions = new Float32Array(count * 3 * 3).map(
+  () => (Math.random() - 0.5) * 2
+)
+const attribute = new THREE.BufferAttribute(positions, 3)
+const geometry = new THREE.BufferGeometry()
+geometry.setAttribute("position", attribute)
+
 const mesh = new THREE.Mesh(
-  new THREE.BoxGeometry(1, 1, 1, 5, 5, 5),
-  new THREE.MeshBasicMaterial({ color: "skyblue" })
+  // new THREE.BoxBufferGeometry(1, 1, 1, 2, 2, 2),
+  geometry,
+  new THREE.MeshBasicMaterial({ color: "skyblue", wireframe: true })
 )
 scene.add(mesh)
 
