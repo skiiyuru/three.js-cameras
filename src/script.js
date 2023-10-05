@@ -1,5 +1,17 @@
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
+import * as dat from "dat.gui"
+import gsap from "gsap"
+
+// Debug UI
+const gui = new dat.GUI()
+
+const parameters = {
+  color: 0xff0000,
+  spin: () => {
+    gsap.to(mesh.rotation, { y: mesh.rotation.y + Math.PI * 2, duration: 1 })
+  },
+}
 
 // Cursor
 const cursor = { x: 0, y: 0 }
@@ -47,7 +59,8 @@ window.addEventListener("dblclick", () => {
 // Scene
 const scene = new THREE.Scene()
 
-// Object
+// Custom object
+
 // const positions = new Float32Array([0, 0, 0, 1, 0, 0, 0, 1, 0])
 // const attribute = new THREE.BufferAttribute(positions, 3)
 const count = 50
@@ -59,11 +72,20 @@ const geometry = new THREE.BufferGeometry()
 geometry.setAttribute("position", attribute)
 
 const mesh = new THREE.Mesh(
-  // new THREE.BoxBufferGeometry(1, 1, 1, 2, 2, 2),
-  geometry,
-  new THREE.MeshBasicMaterial({ color: "skyblue", wireframe: true })
+  new THREE.BoxGeometry(1, 1, 1, 2, 2, 2),
+  // geometry,
+  new THREE.MeshBasicMaterial({ color: parameters.color })
 )
 scene.add(mesh)
+
+// debug
+gui.add(mesh.position, "y").min(-2).max(2).step(0.01).name("Elevation")
+gui.add(mesh, "visible")
+gui.add(mesh.material, "wireframe")
+gui.addColor(parameters, "color").onChange(() => {
+  mesh.material.color.set(parameters.color)
+})
+gui.add(parameters, "spin")
 
 // Camera
 const camera = new THREE.PerspectiveCamera(
